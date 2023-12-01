@@ -22,6 +22,7 @@ defmodule AlpacaInvestors.MixProject do
   defp deps do
     [
       {:elixir_uuid, "~> 1.2"},
+      {:jason, ">= 1.0.0"},
       {:tesla, "~> 1.7"}
     ]
   end
