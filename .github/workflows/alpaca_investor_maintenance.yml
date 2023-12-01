@@ -21,6 +21,8 @@ jobs:
 
       - name: Load secrets
         uses: 1password/load-secrets-action@v1
+        with:
+          export-env: true
         env:
           BELAYALPACA__ALPACA__KEY: op://DevOps/.env.belay-api/all/export BELAYALPACA__ALPACA__KEY
           BELAYALPACA__ALPACA__SECRET: op://DevOps/.env.belay-api/all/export BELAYALPACA__ALPACA__SECRET
