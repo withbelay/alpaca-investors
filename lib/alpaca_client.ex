@@ -5,6 +5,7 @@ defmodule AlpacaInvestors.AlpacaClient do
   """
 
   @starting_cash "10000"
+  @activated_email_prefix "activated_test_investor_email"
 
   def client do
     [base_url: base_url, key: key, secret: secret] =
@@ -23,7 +24,7 @@ defmodule AlpacaInvestors.AlpacaClient do
     client = client()
 
     with {:ok, %Tesla.Env{status: 200, body: accounts}} <-
-           Tesla.get(client, "/v1/accounts?status=ACTIVE&query=test_investor_email"),
+           Tesla.get(client, "/v1/accounts?status=ACTIVE&query=exhausted_test_investor_email"),
          accounts <- Stream.filter(accounts, &has_no_positions(client, &1)),
          accounts <- Stream.filter(accounts, &has_enough_cash(client, &1)),
          accounts <- Enum.take(accounts, num_investor_accounts) do
@@ -40,7 +41,7 @@ defmodule AlpacaInvestors.AlpacaClient do
     with {:ok, %Tesla.Env{status: 200, body: %{"id" => account_id}}} <-
            Tesla.post(client, "/v1/accounts/", %{
              contact: %{
-               email_address: rand_email(),
+               email_address: rand_activated_email(),
                phone_number: "555-666-7788",
                street_address: ["20 N San Mateo Dr"],
                city: "San Mateo",
@@ -164,7 +165,7 @@ defmodule AlpacaInvestors.AlpacaClient do
     end
   end
 
-  defp rand_email, do: "test_investor_email#{UUID.uuid4(:hex)}@email.com"
+  defp rand_activated_email, do: "#{@activated_email_prefix}#{UUID.uuid4(:hex)}@email.com"
 
   defp rand_exhausted_email, do: "exhausted_test_investor_email#{UUID.uuid4(:hex)}@email.com"
 
