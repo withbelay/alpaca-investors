@@ -24,7 +24,7 @@ defmodule AlpacaInvestors.AlpacaClient do
     client = client()
 
     with {:ok, %Tesla.Env{status: 200, body: accounts}} <-
-           Tesla.get(client, "/v1/accounts?status=ACTIVE&query=exhausted_test_investor_email"),
+           Tesla.get(client, "/v1/accounts?status=ACTIVE&query=#{@activated_email_prefix}"),
          accounts <- Stream.filter(accounts, &has_no_positions(client, &1)),
          accounts <- Stream.filter(accounts, &has_enough_cash(client, &1)),
          accounts <- Enum.take(accounts, num_investor_accounts) do
