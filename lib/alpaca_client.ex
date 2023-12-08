@@ -35,6 +35,15 @@ defmodule AlpacaInvestors.AlpacaClient do
     end
   end
 
+  def get_account_details(investor_id) do
+    client = client()
+
+    case Tesla.get(client, "/v1/accounts/#{investor_id}") do
+      {:ok, %Tesla.Env{status: 200, body: account}} -> {:ok, account}
+      {:ok, %Tesla.Env{body: error_body}} -> {:error, error_body}
+    end
+  end
+
   def create_funded_user() do
     client = client()
 
