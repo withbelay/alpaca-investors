@@ -17,12 +17,17 @@ defmodule AlpacaInvestors do
     Agent.start_link(fn -> investor_ids end, name: __MODULE__)
   end
 
-  def fetch_investor do
+  def fetch_investor(opts) do
+    cleanup = Keyword.get(opts, :cleanup, true)
+
     Agent.get_and_update(__MODULE__, fn investor_ids ->
       [investor_id | investor_ids] = investor_ids
 
       Task.start_link(fn -> AlpacaClient.create_funded_user() end)
-      Task.start_link(fn -> AlpacaClient.exhaust_investor(investor_id) end)
+
+      if cleanup do
+        Task.start_link(fn -> AlpacaClient.exhaust_investor(investor_id) end)
+      end
 
       {investor_id, investor_ids}
     end)
